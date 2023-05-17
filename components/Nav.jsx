@@ -5,6 +5,7 @@ import Image from "next/image";
 import {useState, useEffect} from "react";
 import {signIn, signOut, useSession, getProviders} from "next-auth/react";
 
+
 const Nav = () => {
     const {data: session} = useSession();
 
@@ -13,7 +14,6 @@ const Nav = () => {
     useEffect(() => {
         const setUpProviders = async () => {
             const response = await getProviders();
-
             setProviders(response);
         };
         setUpProviders();
@@ -45,7 +45,7 @@ const Nav = () => {
 
                         <Link href="/profile">
                             <Image
-                                src="/assets/images/logo.svg"
+                                src={session?.user.image}
                                 width={37}
                                 height={37}
                                 className="rounded-full"
@@ -54,12 +54,14 @@ const Nav = () => {
                         </Link>
                     </div>
                 ) : <>
+
+
                     {
                         providers && Object.values(providers).map((provider) => (
                             <button
                                 type="button"
                                 key={provider.name}
-                                onClick={() => signIn(provider.id)}
+                                onClick={() => signIn(provider?.id)}
                                 className="black_btn"
                             >
                                 Sign In
@@ -69,14 +71,14 @@ const Nav = () => {
                 </>
                 }
             </div>
-            
+
 
             {/* Mobile navigation */}
             <div className="sm:hidden flex relative">
                 {session?.user ? (
                     <div className="flex">
                         <Image
-                            src="/assets/images/logo.svg"
+                            src={session?.user.image}
                             width={37}
                             height={37}
                             className="rounded-full cursor-pointer"
