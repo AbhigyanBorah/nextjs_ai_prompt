@@ -40,8 +40,7 @@ const Nav = () => {
                             Create Post
                         </Link>
 
-                        <button type="button" onClick={signOut} className="outline_btn">Sign Out
-                        </button>
+                        <button type="button" onClick={signOut} className="outline_btn">Sign Out</button>
 
                         <Link href="/profile">
                             <Image
@@ -54,8 +53,6 @@ const Nav = () => {
                         </Link>
                     </div>
                 ) : <>
-
-
                     {
                         providers && Object.values(providers).map((provider) => (
                             <button
@@ -71,7 +68,6 @@ const Nav = () => {
                 </>
                 }
             </div>
-
 
             {/* Mobile navigation */}
             <div className="sm:hidden flex relative">
@@ -115,20 +111,21 @@ const Nav = () => {
                             </div>
                         )}
                     </div>
-                ) : <>
-                    {
-                        providers && Object.values(providers).map((provider) => (
-                            <button
-                                type="button"
-                                key={provider.name}
-                                onClick={() => signIn(provider.id)}
-                                className="black_btn"
-                            >
-                                Sign In
-                            </button>
-                        ))
-                    }
-                </>
+                ) :
+                    <>
+                        {
+                            providers && Object.values(providers).map((provider) => (
+                                <button
+                                    type="button"
+                                    key={provider.name}
+                                    onClick={() => signIn(provider.id)}
+                                    className="black_btn"
+                                >
+                                    Sign In
+                                </button>
+                            ))
+                        }
+                    </>
                 }
             </div>
         </nav>
