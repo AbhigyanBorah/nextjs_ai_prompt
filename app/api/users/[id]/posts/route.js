@@ -12,6 +12,6 @@ export const GET = async (request, {params}) => {
             status: 200,
         });
     } catch (error) {
-        return new Response("Failed to fetch all prompt", {status: 500});
+        return new Response("Failed to fetch prompts created by user", {status: 500});
     }
 };

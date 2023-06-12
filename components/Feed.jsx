@@ -8,38 +8,65 @@ const PromptCardList = ({data, handleTagClick}) => {
   return (
     <div className='mt-16 prompt_layout'>
       {data.map((post) => (
-          <PromptCard
+        <PromptCard
           key={post._id}
           post={post}
           handleTagClick={handleTagClick}
         >
-          {console.log(post)}
+          {/* {console.log(post)} */}
         </PromptCard>
-       ))}
+      ))}
     </div>
-  )
-}
+  );
+};
 
 
 const Feed = () => {
-  const [searchText, setSearchText] = useState('')
-  const [posts, setPosts] = useState([]);
-  
-  const handleSearchTextChange = (e) => {
-    setSearchText(e.target.value);
-  }
+  const [allPosts, setAllPosts] = useState([]);
+
+  //Search States
+  const [searchText, setSearchText] = useState('');
+  const [searchTimeout, setSearchTimeout] = useState('');
+  const [searchResults, setSearchResults] = useState('');
+
+
+  const fetchPosts = async () => {
+    const response = await fetch('/api/prompt');
+    const data = await response.json();
+
+    setAllPosts(data);
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await fetch('/api/prompt');
-      const data = await response.json();
-
-      setPosts(data);
-    }
-    
     fetchPosts();
-  },[])
+  }, []);
   // console.log(posts, 'all')
+
+  const filterPrompts = (searchtext) => {
+    const regex = new RegExp(searchtext, "i"); //'i' flag for case-insensitive search
+
+    return allPosts.filter(
+      (item) => regex.test(item.creator.username) || regex.test(item.tag) || regex.test(item.prompt)
+    );
+  };
+
+  const handleSearchTextChange = (e) => {
+    clearTimeout(searchTimeout);
+    setSearchText(e.target.value);
+
+    // debounch method
+    setSearchTimeout(() => {
+      const searchResult = filterPrompts(e.target.value);
+      setSearchResults(searchResult);
+    }, 500);
+  };
+
+  const handleTagClick = (tagName) => {
+    setSearchText(tagName);
+
+    const searchResult = filterPrompts(tagName);
+    setSearchResults(searchResult);
+  };
 
   return (
     <section className='feed'>
@@ -54,9 +81,9 @@ const Feed = () => {
         />
       </form>
 
-      <PromptCardList 
-        data={posts}
-        handleTagClick={()=>{}}
+      <PromptCardList
+        data={searchResults ? searchResults : allPosts}
+        handleTagClick={handleTagClick}
       />
     </section>
   );
